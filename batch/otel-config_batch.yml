@@ -1,0 +1,43 @@
+receivers:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'r-batch-job'
+          scrape_interval: 5s
+          static_configs:
+            - targets: ['localhost:9091']
+
+processors:
+  metricstransform/plumber:
+    transforms:
+      include: batch_duration_seconds
+      action: update
+      new_name: http.server.duration
+      operations:
+        - action: experimental_scale_value
+          experimental_scale: 1000
+        - action: add_label
+          new_label: http.target
+          new_value: batchjob.r
+
+  attributes/plumber:
+    actions:
+      - key: service.instance.id
+        action: insert
+        value: localhost
+      - key: tags.team
+        action: insert
+        value: datacrunch
+
+exporters:
+  otlp:
+    endpoint: https://otlp.nr-data.net:4317
+    headers:
+      api-key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXNRAL
+
+service:
+  pipelines:
+    metrics:
+      receivers: [prometheus]
+      processors: [metricstransform/plumber, attributes/plumber]
+      exporters: [otlp]
