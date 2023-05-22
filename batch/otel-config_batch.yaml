@@ -6,6 +6,10 @@ receivers:
           scrape_interval: 5s
           static_configs:
             - targets: ['localhost:9091']
+          metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: "(go_.*|process_.*|pushgateway_.*)"
+            action: drop
 
 processors:
   metricstransform/plumber:
@@ -16,9 +20,9 @@ processors:
       operations:
         - action: experimental_scale_value
           experimental_scale: 1000
-        - action: add_label
+        - action: update_label
+          label: path
           new_label: http.target
-          new_value: batchjob.r
 
   attributes/plumber:
     actions:
