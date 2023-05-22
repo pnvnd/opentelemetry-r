@@ -64,7 +64,7 @@
 
 3. Run your batch job
    ```
-   Rscript ./batchjob.R
+   Rscript ./batch/batchjob.R
    ```
 4. Go to http://localhost:9091/metrics to see the metrics
 
