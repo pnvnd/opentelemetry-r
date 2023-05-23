@@ -44,6 +44,8 @@
 
 # Batch
 
+![](images/batch_diagram.png)
+
 1. Download and extract `pushgateway` from https://github.com/prometheus/pushgateway/releases (`C:\Program Files\Prometheus Pushgateway` in this example)
 2. Run `pushgateway.exe` in a terminal. You may need to allow this over the firewall.
    ![](images/pushgateway.png)
@@ -62,7 +64,7 @@
    .\pushgateway.exe
    ```
 
-3. Run your batch job
+3. Run your batch job.  This scripts runs all of the jobs saved in the `./batch/jobs` directory and pushes metrics to the Prometheus Pushgateway once each job is completed.  The original R jobs do not change.
    ```
    Rscript ./batch/batchjob.R
    ```
@@ -72,6 +74,12 @@
    ```
    ./otelcol-contrib.exe --config=file:'D:/OpenTelemetry/otel-config_batch.yml'
    ```
+
+![](images/nr_batch_00.png)
+![](images/nr_batch_01.png)
+![](images/nr_batch_02.png)
+![](images/nr_batch_03.png)
+
 
 # Shiny
 
