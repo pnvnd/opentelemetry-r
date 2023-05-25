@@ -1,2 +1,3 @@
 r-batch/input/*.csv
 r-batch/output/*.csv
+.DS_Store
