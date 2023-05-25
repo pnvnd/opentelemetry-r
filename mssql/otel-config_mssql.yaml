@@ -1,0 +1,109 @@
+receivers:
+  filelog/mssql:
+    encoding: utf-16le
+    include:
+      - D:/Program Files/Microsoft SQL Server/MSSQL15.DATACRUNCH\MSSQL/Log/ERRORLOG
+      - D:/Program Files/Microsoft SQL Server/MSSQL15.DATACRUNCH\MSSQL/Log/FDLAUNCHERRORLOG
+      - D:/Program Files/Microsoft SQL Server/MSSQL15.DATACRUNCH\MSSQL/Log/SQLAGENT.OUT
+      - D:/Program Files/Microsoft SQL Server/MSSQL15.DATACRUNCH\MSSQL/Log/fd
+
+  sqlserver:
+    collection_interval: 10s
+    computer_name: SERVER
+    instance_name: INSTANCE
+    resource_attributes:
+      sqlserver.computer.name:
+        enabled: true
+      sqlserver.database.name:
+        enabled: true
+      sqlserver.instance.name:
+        enabled: true
+    metrics:
+      sqlserver.batch.request.rate:
+        enabled: false
+
+  sqlquery:
+    driver: sqlserver
+    datasource: "sqlserver://user:pass@SERVER/INSTANCE?database=master"
+    queries:
+      - sql: >-
+          SELECT 'instance_buffer_pool_size' AS metric_name,
+          Count_big(*) * (8*1024) AS metric_value,
+          'gauge' as metric_type,
+          database_id
+          FROM sys.dm_os_buffer_descriptors
+          WITH (nolock)
+          GROUP BY database_id
+          
+        metrics:
+          - metric_name: sqlquery.instance_buffer_pool_size
+            value_column: "metric_value"
+            data_type: gauge
+            attribute_columns: [ "database_id", "metric_type" ]
+            static_attributes:
+              tags.team: datacrunch
+
+  hostmetrics:
+    collection_interval: 20s
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      load:
+      memory:
+        metrics:
+          system.memory.utilization:
+            enabled: true
+      disk:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      network:
+      paging:
+        metrics:
+          system.paging.utilization:
+             enabled: true
+#     processes:
+      process:
+         mute_process_name_error: true
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 1000
+    spike_limit_mib: 200
+  batch:
+  cumulativetodelta:
+    include:
+      metrics:
+        - system.network.io
+        - system.disk.operations
+        - system.network.dropped
+        - system.network.packets
+        - process.cpu.time
+      match_type: strict
+  resource:
+    attributes:
+      - key: host.id
+        from_attribute: host.name
+        action: upsert
+  resourcedetection:
+    detectors: [env, system]
+
+exporters:
+  otlp:
+    endpoint: https://otlp.nr-data.net:4317
+    headers:
+      api-key: ${NEW_RELIC_LICENSE_KEY}
+
+service:
+  pipelines:
+    logs/mssql:
+      receivers: [filelog/mssql]
+      exporters: [otlp]
+    metrics:
+      receivers: [hostmetrics, sqlserver, sqlquery]
+      processors: [batch, resourcedetection, resource, cumulativetodelta]
+      exporters: [otlp]

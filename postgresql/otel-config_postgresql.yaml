@@ -1,0 +1,76 @@
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/filelogreceiver
+receivers:
+  filelog/postgresql:
+    include:
+      - /var/log/postgresql/*.log
+
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/postgresqlreceiver
+  postgresql:
+    endpoint: localhost:5432
+    transport: tcp
+    username: newrelic
+    password: NewRelic1!
+    databases:
+      - postgres
+    collection_interval: 10s
+    tls:
+      insecure: true
+      insecure_skip_verify: true
+    #   ca_file: /home/otel/authorities.crt
+    #   cert_file: /home/otel/mypostgrescert.crt
+    #   key_file: /home/otel/mypostgreskey.key
+
+# https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/sqlqueryreceiver
+  sqlquery:
+    driver: postgres
+    datasource: "postgresql://newrelic:NewRelic1!@localhost:5432/postgres?sslmode=disable"
+#   datasource: "host=localhost port=5432 user=newrelic password=NewRelic1! dbname=postgres sslmode=disable"
+    queries:
+      - sql: >-
+          SELECT
+          BG.checkpoints_timed AS scheduled_checkpoints_performed,
+          BG.checkpoints_req AS requested_checkpoints_performed,
+          BG.buffers_checkpoint AS buffers_written_during_checkpoint,
+          BG.buffers_clean AS buffers_written_by_background_writer,
+          BG.maxwritten_clean AS background_writer_stops,
+          BG.buffers_backend AS buffers_written_by_backend,
+          BG.buffers_alloc AS buffers_allocated
+          FROM pg_stat_bgwriter BG;
+
+        metrics:
+          - metric_name: sqlquery.postgresql.scheduled_checkpoints_performed
+            value_column: "scheduled_checkpoints_performed"
+            data_type: gauge
+          - metric_name: sqlquery.postgresql.requested_checkpoints_performed
+            value_column: "requested_checkpoints_performed"
+            data_type: gauge
+          - metric_name: sqlquery.postgresql.buffers_written_during_checkpoint
+            value_column: "buffers_written_during_checkpoint"
+            data_type: gauge
+          - metric_name: sqlquery.postgresql.buffers_written_by_background_writer
+            value_column: "buffers_written_by_background_writer"
+            data_type: gauge
+          - metric_name: sqlquery.postgresql.background_writer_stops
+            value_column: "background_writer_stops"
+            data_type: gauge
+          - metric_name: sqlquery.postgresql.buffers_written_by_backend
+            value_column: "buffers_written_by_backend"
+            data_type: gauge
+          - metric_name: sqlquery.postgresql.buffers_allocated
+            value_column: "buffers_allocated"
+            data_type: gauge
+
+exporters:
+  otlp:
+    endpoint: https://otlp.nr-data.net:4317
+    headers:
+      api-key: ${NEW_RELIC_LICENSE_KEY}
+
+service:
+  pipelines:
+    logs:
+      receivers: [filelog/postgresql]
+      exporters: [otlp]
+    metrics:
+      receivers: [postgresql, sqlquery]
+      exporters: [otlp]

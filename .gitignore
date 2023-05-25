@@ -1,2 +1,2 @@
-batch/input
-batch/output
+r-batch/input/*.csv
+r-batch/output/*.csv
