@@ -1,0 +1,1 @@
+# MySQL Monitoring with OpenTelemetry
