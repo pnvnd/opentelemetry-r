@@ -1,0 +1,87 @@
+receivers:
+  filelog/oracledb:
+    include:
+      - D:/app/Peter/product/21c/diag/rdbms/xe/xe/trace/alert_xe.log
+      - D:/app/Peter/product/21c/diag/tnslsnr/DESKTOP-IED569R/listener/trace/listener.log
+
+  sqlquery/oracledb:
+    driver: oracle
+    datasource: "oracle://sys:NewRelic1!@localhost:1521/XE"
+    collection_interval: 30s
+    queries:
+      - sql: >-
+          SELECT SUM(PHYRDS) AS "physical_reads",
+          INST_ID AS "inst_id"
+          FROM GV_$$FILESTAT
+          GROUP BY INST_ID
+
+        metrics:
+          - metric_name: sqlquery.oracledb.filestat
+            description: "Custom query file stat"
+            value_column: "physical_reads"
+            data_type: gauge
+            attribute_columns: [ "inst_id" ]
+            static_attributes:
+              tags.team: datacrunch
+
+      - sql: >-
+          SELECT SUM(stat.gets) AS "gets",
+          SUM(stat.waits) AS "waits",
+          SUM(stat.waits)/SUM(stat.gets) AS "ratio",
+          inst.inst_id AS "inst_id"
+          FROM GV_$$ROLLSTAT stat, GV_$$INSTANCE inst
+          WHERE stat.inst_id=inst.inst_id
+          GROUP BY inst.inst_id
+
+        metrics:
+          - metric_name: sqlquery.oracledb.rollstat.rate
+            description: "Custom query ratio"
+            value_column: "ratio"
+            data_type: gauge
+            value_type: double
+            attribute_columns: [ "inst_id", "waits", "gets" ]
+            static_attributes:
+              tags.team: datacrunch
+
+      - sql: >-
+          select * from (select NAME as "metric", VALUE as "result" from v_$$sysstat)
+          pivot (max("result") for "metric" in (
+          'DB time' as "dbTime",
+          'CPU used by this session' as "cpuTime",
+          'messages sent' as "msgSent"
+          ))
+
+        metrics:
+          - metric_name: sqlquery.oracledb.sysstat
+            description: "Custom system stats"
+            value_column: "cpuTime"
+            data_type: gauge
+            attribute_columns: [ "dbTime", "msgSent" ]
+            static_attributes:
+              tags.team: datacrunch
+
+processors:
+  attributes/oracledb:
+    actions:
+      - key: entity.name
+        action: insert
+        value: oracledb
+      - key: service.instance.id
+        action: insert
+        value: localhost-windows
+
+exporters:
+  otlp:
+    endpoint: https://otlp.nr-data.net:4317
+    headers:
+      api-key: ${NEW_RELIC_LICENSE_KEY}
+
+service:
+  pipelines:
+    logs/oracledb:
+      receivers: [filelog/oracledb]
+      exporters: [otlp]
+    metrics:
+      receivers: [sqlquery/oracledb]
+      processors: [attributes/oracledb]
+      exporters: [otlp]
