@@ -1,0 +1,644 @@
+{
+    "name": "Microsoft SQL Server (OpenTelemetry)",
+    "description": null,
+    "permissions": "PUBLIC_READ_WRITE",
+    "pages": [
+      {
+        "name": "MSSQL Instance",
+        "description": null,
+        "widgets": [
+          {
+            "title": "Batch request rate",
+            "layout": {
+              "column": 1,
+              "row": 1,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.batch.request.rate) AS 'Requests per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "SQL compilations and re-compilations rates",
+            "layout": {
+              "column": 5,
+              "row": 1,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.batch.sql_compilation.rate) AS 'Compilations per second', average(sqlserver.batch.sql_recompilation.rate) AS 'Re-compilations per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Lock wait rate",
+            "layout": {
+              "column": 9,
+              "row": 1,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.lock.wait.rate) AS 'Requests per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Lock wait time",
+            "layout": {
+              "column": 1,
+              "row": 4,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.lock.wait_time.avg) AS 'ms' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Buffer cache hit ratio",
+            "layout": {
+              "column": 5,
+              "row": 4,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.page.buffer_cache.hit_ratio) AS 'Percentage' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Page checkpoint flush rate",
+            "layout": {
+              "column": 9,
+              "row": 4,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.page.checkpoint.flush.rate) AS 'Pages per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Page lazy write rate",
+            "layout": {
+              "column": 1,
+              "row": 7,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.page.lazy_write.rate) AS 'Writes per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Page life expentancy",
+            "layout": {
+              "column": 5,
+              "row": 7,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.page.life_expectancy) AS 'Seconds' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Page operation rate",
+            "layout": {
+              "column": 9,
+              "row": 7,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.page.operation.rate) AS 'Operations per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Page split rate",
+            "layout": {
+              "column": 1,
+              "row": 10,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.page.split.rate) AS 'Page per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Rate",
+            "layout": {
+              "column": 5,
+              "row": 10,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction.rate) AS 'Transactions per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Write Rate",
+            "layout": {
+              "column": 9,
+              "row": 10,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction.write.rate) AS 'Transactions per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Log Flush Data Rate",
+            "layout": {
+              "column": 1,
+              "row": 13,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction_log.flush.data.rate) AS 'Bytes per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Log Flush Rate",
+            "layout": {
+              "column": 5,
+              "row": 13,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction_log.flush.rate) AS 'Flushes per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Log Flush Wait Rate",
+            "layout": {
+              "column": 9,
+              "row": 13,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction_log.flush.wait.rate) AS 'Commits per second' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Log Transactions",
+            "layout": {
+              "column": 1,
+              "row": 16,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction_log.growth.count) AS 'Growth Count', average(sqlserver.transaction_log.shrink.count) AS 'Shrink Count' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Transaction Log Usage",
+            "layout": {
+              "column": 5,
+              "row": 16,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT average(sqlserver.transaction_log.usage) AS 'Percentage' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          },
+          {
+            "title": "Connections",
+            "layout": {
+              "column": 9,
+              "row": 16,
+              "width": 4,
+              "height": 3
+            },
+            "linkedEntityGuids": null,
+            "visualization": {
+              "id": "viz.line"
+            },
+            "rawConfiguration": {
+              "facet": {
+                "showOtherSeries": false
+              },
+              "legend": {
+                "enabled": true
+              },
+              "nrqlQueries": [
+                {
+                  "accountIds": [
+                    0
+                  ],
+                  "query": "SELECT latest(sqlserver.user.connection.count) AS 'Connections' FROM Metric TIMESERIES"
+                }
+              ],
+              "platformOptions": {
+                "ignoreTimeRange": false
+              },
+              "yAxisLeft": {
+                "zero": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "variables": []
+  }
