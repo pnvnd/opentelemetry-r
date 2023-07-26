@@ -18,4 +18,9 @@
 4. Download [`otelcol-contrib`](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) and extract somewhere.
 
 # Shiny
-TBD
+
+1. Run this
+   ```
+   RScript ./shiny.R
+   ```
+   
