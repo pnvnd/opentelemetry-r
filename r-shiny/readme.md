@@ -23,4 +23,30 @@
    ```
    RScript ./shiny.R
    ```
+
+2. Go to http://127.0.0.1:8000 to generate some traffic.
+   ![](images/r-shiny_02.png)
+
+3. Go to http://localhost:8000/metrics to see the following metrics.
+
+    | metric name | metric type |
+    | :---------- | :---------- |
+    | process_cpu_seconds_total | counter |
+    | process_cpu_seconds_total_created | gauge |
+    | shiny_sessions | gauge |
+    | shiny_flush_duration_seconds | histogram |
+    | shiny_flush_duration_seconds_created | gauge |
    
+4. Run the OpenTelemetry Collector with the `otel-config_r-shiny.yaml`
+   ```
+   ./otelcol-contrib.exe --config=file:'./otel-config_r-shiny.yml'
+   ```
+# New Relic Example
+Go to APM & Services > OpenTelemetry to see the Plumber entity.
+![](images/r-shiny_02.png)
+
+Check the Summary > Metrics page to see basic information
+![](images/r-shiny_03.png)
+
+Finally, go to the `Metrics Explorer` to see everything else.
+![](images/r-shiny_04.png)

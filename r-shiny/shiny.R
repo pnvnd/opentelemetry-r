@@ -33,7 +33,7 @@ ui <- fluidPage(
 )
 
 # Define server logic required to draw a histogram ----
-server <- function(input, output) {
+server <- function(input, output, session) {
 
   # Histogram of the Old Faithful Geyser Data ----
   # with requested number of bins
@@ -52,18 +52,13 @@ server <- function(input, output) {
          xlab = "Waiting time to next eruption (in mins)",
          main = "Histogram of waiting times")
 
-    })
+  })
 
 }
 
 # Create Shiny app ----
-
-
 options(shiny.port = 8000)
-shinyApp(ui = ui, server = server)
-app <- shinyApp(...)
-
 register_default_metrics()
+app <- shiny::shinyApp(ui = ui, server = server)
 app <- register_shiny_metrics(app)
 app
-
