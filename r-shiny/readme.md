@@ -25,7 +25,7 @@
    ```
 
 2. Go to http://127.0.0.1:8000 to generate some traffic.
-   ![](images/r-shiny_02.png)
+   ![](images/r-shiny_01.png)
 
 3. Go to http://localhost:8000/metrics to see the following metrics.
 
