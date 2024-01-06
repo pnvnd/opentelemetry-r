@@ -1,0 +1,16 @@
+# Image must be built to add "openmetrics" package
+# docker build . -t r-plumber:latest
+FROM rstudio/plumber:latest
+
+EXPOSE 8000
+
+RUN R -e "install.packages('openmetrics', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+
+WORKDIR /opt/r
+
+COPY . .
+
+ENTRYPOINT ["Rscript", "plumberSrv.R"]
+
+# Run otelcol-contrib to send metrics. Windows uses ${pwd} everyone else uses $(pwd)
+# docker run -d --env-file .env -v ${pwd}/docker_otel-config_r-plumber.yaml:/etc/otelcol-contrib/config.yaml otel/opentelemetry-collector-contrib:latest

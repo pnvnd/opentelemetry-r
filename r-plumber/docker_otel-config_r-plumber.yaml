@@ -1,0 +1,47 @@
+extensions:
+  health_check:
+
+receivers:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'my-plumber-api'
+          scrape_interval: 5s
+          static_configs:
+            - targets: ['host.docker.internal:8000']
+
+processors:
+  metricstransform/plumber:
+    transforms:
+      include: http_request_duration_seconds
+      action: update
+      new_name: http.server.duration
+      operations:
+        - action: experimental_scale_value
+          experimental_scale: 1000
+        - action: update_label
+          label: path
+          new_label: http.target
+
+  attributes/plumber:
+    actions:
+      - key: service.instance.id
+        action: insert
+        value: localhost
+      - key: tags.team
+        action: insert
+        value: datacrunch
+
+exporters:
+  otlp:
+    endpoint: https://otlp.nr-data.net:4317
+    headers:
+      api-key: ${env:NEW_RELIC_LICENSE_KEY}
+
+service:
+  extensions: [health_check]
+  pipelines:
+    metrics:
+      receivers: [prometheus]
+      processors: [metricstransform/plumber, attributes/plumber]
+      exporters: [otlp]
