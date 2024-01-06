@@ -57,6 +57,7 @@ server <- function(input, output, session) {
 }
 
 # Create Shiny app ----
+options(shiny.host = "0.0.0.0")
 options(shiny.port = 8000)
 register_default_metrics()
 app <- shiny::shinyApp(ui = ui, server = server)

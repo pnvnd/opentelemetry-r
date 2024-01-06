@@ -11,8 +11,7 @@
 3. Launch `R.exe` or `R.app` and install the following packages:
    ```
    install.packages("openmetrics")
-   install.packages("plumber")
-   install.packages("httr")
+   install.packages("shiny")
    ```
 
 4. Download [`otelcol-contrib`](https://github.com/open-telemetry/opentelemetry-collector-releases/releases) and extract somewhere.
