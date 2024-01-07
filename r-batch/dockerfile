@@ -1,0 +1,18 @@
+# Image must be built to add "openmetrics" package
+# docker build . -t r-batchjob:latest
+FROM rstudio/r-base:4.3.2-centos7
+
+EXPOSE 80
+
+RUN R -e "install.packages('openmetrics', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+# RUN R -e "install.packages('httr', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+
+WORKDIR /opt/r
+
+COPY batchjob.R batchjob.R
+COPY jobs jobs
+
+ENTRYPOINT ["Rscript", "batchjob.R"]
+
+# Run otelcol-contrib to send metrics. Windows uses ${pwd} everyone else uses $(pwd)
+# docker run -d --env-file .env -v ${pwd}/docker_otel-config_r-batchjob.yaml:/etc/otelcol-contrib/config.yaml otel/opentelemetry-collector-contrib:latest

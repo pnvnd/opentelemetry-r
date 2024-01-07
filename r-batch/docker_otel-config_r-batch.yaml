@@ -1,3 +1,6 @@
+extensions:
+  health_check:
+
 receivers:
   prometheus:
     config:
@@ -5,7 +8,7 @@ receivers:
         - job_name: 'r-batch-job'
           scrape_interval: 5s
           static_configs:
-            - targets: ['localhost:9091']
+            - targets: ['host.docker.internal:9091']
           metric_relabel_configs:
           - source_labels: [__name__]
             regex: "(go_.*|process_.*|pushgateway_.*)"
@@ -37,9 +40,10 @@ exporters:
   otlp:
     endpoint: https://otlp.nr-data.net:4317
     headers:
-      api-key: ${NEW_RELIC_LICENSE_KEY}
+      api-key: ${env:NEW_RELIC_LICENSE_KEY}
 
 service:
+  extensions: [health_check]
   pipelines:
     metrics:
       receivers: [prometheus]
